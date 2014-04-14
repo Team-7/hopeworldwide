@@ -1,0 +1,121 @@
+package com.dhliwayok.hopewwdatabase;
+
+import com.dhliwayok.hopewwdatabase.HopeDbAdapter.HopeHelper;
+
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.os.Build;
+
+public class MainActivity extends ActionBarActivity {
+
+	HopeDbAdapter mydb;
+	EditText id;
+	 EditText name;
+	 EditText dateOfbirth;
+	 RadioGroup odeama;
+	 RadioGroup gender;
+	 RadioButton selectedOdeama;
+	 Button save;
+	 RadioButton radioSexButton;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		 mydb= new HopeDbAdapter(this);
+		 
+		 id = (EditText) findViewById(R.id.editText1);
+		 name = (EditText) findViewById(R.id.editText2);
+		 dateOfbirth = (EditText) findViewById(R.id.editText3);
+		 odeama = (RadioGroup) findViewById(R.id.radioOdeama);
+		 gender = (RadioGroup) findViewById(R.id.radioGender);
+		 save = (Button) findViewById(R.id.button1);
+		 
+		 
+	}
+	
+	public void insertCild(View view){
+		final int myId = Integer.valueOf(id.getText().toString());
+		final String myName = name.getText().toString();
+		final String myDate = dateOfbirth.getText().toString();
+		
+		
+		save.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				char sex = 'M'; 
+				String od = "Y";
+				// TODO Auto-generated method stub
+				// get selected radio button from radioGroup
+                int selectedIdgender = gender.getCheckedRadioButtonId();
+                int selectedIdodeama = odeama.getCheckedRadioButtonId();
+                // find the radiobutton by returned id
+                radioSexButton = (RadioButton) findViewById(selectedIdgender);
+                selectedOdeama = (RadioButton) findViewById(selectedIdodeama);
+                
+                if(radioSexButton.equals("Male"))
+                	sex = 'M';
+                else
+                	sex = 'F';
+                
+                if(selectedOdeama.equals("Yes"))
+                	od = "Y";
+                else
+                	od = "N";
+                
+                if(myId != 0 && !myName.equals("") && !myDate.equals("")){
+                	
+                	 if(mydb.insertChild(myId, myName, od, myDate, sex)>0){
+                		 
+                		 Message.message(MainActivity.this, "Child added successfully");
+                	 }
+                	
+                }
+				
+			}
+		});
+		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * A placeholder fragment containing a simple view.
+	 */
+
+	
+	}
+
+
